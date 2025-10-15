@@ -91,7 +91,8 @@ namespace Illustra.Events
             Prompt,
             Rating,
             Tag,
-            Extension
+            Extension,
+            FileName
         }
 
         /// <summary>
@@ -116,6 +117,8 @@ namespace Illustra.Events
         public List<string> TagFilters { get; set; } = new List<string>();
         public bool IsExtensionFilterEnabled { get; set; } // 追加
         public List<string> ExtensionFilters { get; set; } = new List<string>(); // 追加
+        public string FileNameFilter { get; set; } = string.Empty; // ファイル名フィルタ
+        public bool IncludeExtensionInFileNameFilter { get; set; } = false; // ファイル名フィルタで拡張子も含めるかどうか
 
         // パラメータなしのコンストラクタ
         public FilterChangedEventArgs(string sourceId)
@@ -176,6 +179,24 @@ namespace Illustra.Events
             return this;
         }
 
+        public FilterChangedEventArgsBuilder WithFileNameFilter(string fileNameFilter)
+        {
+            _args.FileNameFilter = fileNameFilter ?? string.Empty;
+            if (!_args.ChangedTypes.Contains(FilterChangedEventArgs.FilterChangedType.FileName))
+                _args.ChangedTypes.Add(FilterChangedEventArgs.FilterChangedType.FileName);
+            _args.IsClearOperation = false;
+            return this;
+        }
+
+        public FilterChangedEventArgsBuilder WithIncludeExtensionInFileNameFilter(bool includeExtension)
+        {
+            _args.IncludeExtensionInFileNameFilter = includeExtension;
+            if (!_args.ChangedTypes.Contains(FilterChangedEventArgs.FilterChangedType.FileName))
+                _args.ChangedTypes.Add(FilterChangedEventArgs.FilterChangedType.FileName);
+            _args.IsClearOperation = false;
+            return this;
+        }
+
         /// <summary>
         /// フィルタのクリア操作を設定します。
         /// </summary>
@@ -191,6 +212,8 @@ namespace Illustra.Events
             _args.IsTagFilterEnabled = false;
             _args.ExtensionFilters.Clear();
             _args.IsExtensionFilterEnabled = false;
+            _args.FileNameFilter = string.Empty;
+            _args.IncludeExtensionInFileNameFilter = false;
             return this;
         }
 
@@ -211,6 +234,8 @@ namespace Illustra.Events
             _args.TagFilters = settings.Tags ?? new List<string>();
             _args.IsExtensionFilterEnabled = settings.Extensions?.Any() ?? false;
             _args.ExtensionFilters = settings.Extensions ?? new List<string>();
+            _args.FileNameFilter = settings.FileNameFilter ?? string.Empty;
+            _args.IncludeExtensionInFileNameFilter = settings.IncludeExtensionInFileNameFilter;
             return this;
         }
 

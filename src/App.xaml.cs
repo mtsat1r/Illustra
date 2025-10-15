@@ -161,6 +161,9 @@ namespace Illustra
             // 設定を読み込む
             var settings = SettingsHelper.GetSettings();
 
+            // LRUキャッシュを初期化
+            Illustra.Extensions.FileNodeModelExtensions.InitializeThumbnailCache(settings.ThumbnailCacheSize);
+
             // Resolve IEventAggregator early
             var eventAggregator = Container.Resolve<IEventAggregator>();
             // var dispatcherService = new WpfDispatcherService(); // Removed

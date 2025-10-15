@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using Illustra.Models;
+using Illustra.Helpers;
 
 namespace Illustra.Extensions
 {
@@ -11,6 +12,9 @@ namespace Illustra.Extensions
     /// </summary>
     public static class FileNodeModelExtensions
     {
+        // LRUキャッシュのインスタンス（静的）
+        private static LruThumbnailCache? _thumbnailCache;
+
         // サムネイル状態を保持する静的ディクショナリ
         private static readonly ConditionalWeakTable<FileNodeModel, ThumbnailState> _thumbnailStates =
             new ConditionalWeakTable<FileNodeModel, ThumbnailState>();
@@ -20,7 +24,15 @@ namespace Illustra.Extensions
         {
             public bool HasThumbnail { get; set; }
             public bool IsLoadingThumbnail { get; set; }
-            public BitmapSource? Thumbnail { get; set; }
+        }
+
+        /// <summary>
+        /// LRUキャッシュを初期化します
+        /// </summary>
+        /// <param name="maxCacheSize">最大キャッシュサイズ</param>
+        public static void InitializeThumbnailCache(int maxCacheSize = 50)
+        {
+            _thumbnailCache = new LruThumbnailCache(maxCacheSize);
         }
 
         /// <summary>
@@ -28,8 +40,8 @@ namespace Illustra.Extensions
         /// </summary>
         public static bool HasThumbnail(this FileNodeModel model)
         {
-            var state = _thumbnailStates.GetOrCreateValue(model);
-            return state.HasThumbnail;
+            if (_thumbnailCache == null) return false;
+            return _thumbnailCache.HasImage(model.FullPath);
         }
 
         /// <summary>
@@ -60,22 +72,51 @@ namespace Illustra.Extensions
         }
 
         /// <summary>
-        /// サムネイル画像を取得します
+        /// サムネイル画像を取得します（LRUキャッシュから）
         /// </summary>
         public static BitmapSource? GetThumbnail(this FileNodeModel model)
         {
-            var state = _thumbnailStates.GetOrCreateValue(model);
-            return state.Thumbnail;
+            if (_thumbnailCache == null) return null;
+            return _thumbnailCache.GetImage(model.FullPath);
         }
 
         /// <summary>
-        /// サムネイル画像を設定します
+        /// サムネイル画像を設定します（LRUキャッシュに追加）
         /// </summary>
         public static void SetThumbnail(this FileNodeModel model, BitmapSource? value)
         {
             var state = _thumbnailStates.GetOrCreateValue(model);
-            state.Thumbnail = value;
             state.HasThumbnail = value != null;
+            
+            if (value != null && _thumbnailCache != null)
+            {
+                // LRUキャッシュに追加（既存の場合は更新される）
+                try
+                {
+                    _thumbnailCache.GetImage(model.FullPath); // キャッシュに追加
+                }
+                catch
+                {
+                    // エラーが発生した場合は無視
+                }
+            }
+        }
+
+        /// <summary>
+        /// キャッシュをクリアします
+        /// </summary>
+        public static void ClearThumbnailCache()
+        {
+            _thumbnailCache?.Clear();
+        }
+
+        /// <summary>
+        /// キャッシュサイズを更新します
+        /// </summary>
+        /// <param name="maxCacheSize">新しい最大キャッシュサイズ</param>
+        public static void UpdateCacheSize(int maxCacheSize)
+        {
+            _thumbnailCache = new LruThumbnailCache(maxCacheSize);
         }
     }
 }

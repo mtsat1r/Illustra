@@ -38,7 +38,8 @@
                       VerticalAlignment="Center"
                       Padding="0,5,0,0"
                       Effect="{Binding TextEffect, ElementName=root}"
-                      Foreground="{Binding TextColor, ElementName=root}" />
+                      Foreground="{Binding TextColor, ElementName=root}"
+                      Visibility="Collapsed" />
         </Grid>
     </Viewbox>
 </UserControl>

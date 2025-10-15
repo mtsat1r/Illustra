@@ -18,7 +18,7 @@ namespace Illustra.Helpers
         /// <summary>
         /// レーティング値に対応した色を取得します
         /// </summary>
-        /// <param name="rating">レーティング値 (1-5)</param>
+        /// <param name="rating">レーティング値 (0=なし, 1=あり)</param>
         /// <returns>レーティング値に対応した色のブラシ</returns>
         public static Brush GetRatingColor(int rating, RatingTheme theme = RatingTheme.Colorful)
         {
@@ -26,51 +26,31 @@ namespace Illustra.Helpers
             {
                 RatingTheme.GoldOrange => rating switch
                 {
-                    1 => new SolidColorBrush(Color.FromRgb(189, 189, 189)), // Light Gray
-                    2 => new SolidColorBrush(Color.FromRgb(251, 192, 45)),  // Smoky Yellow
-                    3 => new SolidColorBrush(Color.FromRgb(249, 168, 37)),  // Gold
-                    4 => new SolidColorBrush(Color.FromRgb(245, 127, 23)),  // Deep Gold
-                    5 => new SolidColorBrush(Color.FromRgb(230, 81, 0)),    // Dark Orange
+                    1 => new SolidColorBrush(Color.FromRgb(249, 168, 37)),  // Gold
                     _ => Brushes.Gray
                 },
 
                 RatingTheme.Blue => rating switch
                 {
-                    1 => new SolidColorBrush(Color.FromRgb(176, 190, 197)), // Light Blue Gray
-                    2 => new SolidColorBrush(Color.FromRgb(144, 202, 249)), // Sky Blue
-                    3 => new SolidColorBrush(Color.FromRgb(66, 165, 245)),  // Soft Blue
-                    4 => new SolidColorBrush(Color.FromRgb(30, 136, 229)),  // Deep Blue
-                    5 => new SolidColorBrush(Color.FromRgb(13, 71, 161)),   // Dark Navy
+                    1 => new SolidColorBrush(Color.FromRgb(66, 165, 245)),  // Soft Blue
                     _ => Brushes.Gray
                 },
 
                 RatingTheme.Green => rating switch
                 {
-                    1 => new SolidColorBrush(Color.FromRgb(200, 230, 201)), // Pale Green
-                    2 => new SolidColorBrush(Color.FromRgb(165, 214, 167)), // Soft Green
-                    3 => new SolidColorBrush(Color.FromRgb(102, 187, 106)), // Lime Green
-                    4 => new SolidColorBrush(Color.FromRgb(56, 142, 60)),   // Deep Green
-                    5 => new SolidColorBrush(Color.FromRgb(27, 94, 32)),    // Forest Green
+                    1 => new SolidColorBrush(Color.FromRgb(102, 187, 106)), // Lime Green
                     _ => Brushes.Gray
                 },
 
                 RatingTheme.Red => rating switch
                 {
-                    1 => new SolidColorBrush(Color.FromRgb(255, 205, 210)), // Light Pink
-                    2 => new SolidColorBrush(Color.FromRgb(239, 154, 154)), // Soft Red
-                    3 => new SolidColorBrush(Color.FromRgb(229, 115, 115)), // Moderate Red
-                    4 => new SolidColorBrush(Color.FromRgb(211, 47, 47)),   // Deep Red
-                    5 => new SolidColorBrush(Color.FromRgb(183, 28, 28)),   // Dark Red
+                    1 => new SolidColorBrush(Color.FromRgb(229, 115, 115)), // Moderate Red
                     _ => Brushes.Gray
                 },
 
                 RatingTheme.Colorful => rating switch
                 {
-                    1 => new SolidColorBrush(Color.FromRgb(255, 205, 210)), // Light Pink
-                    2 => new SolidColorBrush(Color.FromRgb(165, 214, 167)), // Soft Green
-                    3 => new SolidColorBrush(Color.FromRgb(66, 165, 245)),  // Soft Blue
-                    4 => new SolidColorBrush(Color.FromRgb(56, 142, 60)),   // Deep Green
-                    5 => new SolidColorBrush(Color.FromRgb(230, 81, 0)),    // Dark Orange
+                    1 => new SolidColorBrush(Color.FromRgb(230, 81, 0)),    // Dark Orange
                     _ => Brushes.Gray
                 },
 
@@ -81,7 +61,7 @@ namespace Illustra.Helpers
         /// <summary>
         /// レーティング値とテーマに応じたテキスト色を取得します
         /// </summary>
-        /// <param name="rating">レーティング値 (1-5)</param>
+        /// <param name="rating">レーティング値 (0=なし, 1=あり)</param>
         /// <param name="theme">テーマ</param>
         /// <returns>テキスト色のブラシ</returns>
         public static SolidColorBrush GetTextColor(int rating = 0, RatingTheme theme = RatingTheme.Colorful)
@@ -92,8 +72,8 @@ namespace Illustra.Helpers
                 return new SolidColorBrush(Color.FromRgb(96, 96, 96)); // デフォルトのダークグレー
             }
 
-            // レーティング値に応じて暗さを調整 (レーティングが低いほど暗い)
-            double brightness = rating > 3 ? 1.0 : 0.2 + (rating * 0.1);
+            // レーティング値に応じて暗さを調整
+            double brightness = 1.0;
 
             // テーマ別の基本色を取得
             Color baseColor = theme switch
@@ -119,29 +99,25 @@ namespace Illustra.Helpers
         /// <summary>
         /// レーティング値に対応した星マークの文字列を取得します
         /// </summary>
-        /// <param name="rating">レーティング値 (1-5)</param>
+        /// <param name="rating">レーティング値 (0=なし, 1=あり)</param>
         /// <returns>レーティング値に対応した星マークの文字列</returns>
         public static string GetRatingStars(int rating)
         {
             return rating switch
             {
-                1 => "★☆☆☆☆",
-                2 => "★★☆☆☆",
-                3 => "★★★☆☆",
-                4 => "★★★★☆",
-                5 => "★★★★★",
-                _ => "☆☆☆☆☆"
+                1 => "★",
+                _ => "☆"
             };
         }
 
         /// <summary>
         /// サムネイル表示用の数字入りレーティングスターを取得します
         /// </summary>
-        /// <param name="rating">レーティング値 (1-5)</param>
+        /// <param name="rating">レーティング値 (0=なし, 1=あり)</param>
         /// <returns>数字入りの星マーク</returns>
         public static string GetRatingStarWithNumber(int rating)
         {
-            if (rating <= 0 || rating > 5)
+            if (rating <= 0 || rating > 1)
                 return "";
 
             // Unicode文字で★に数字を近似的に表現
@@ -151,12 +127,12 @@ namespace Illustra.Helpers
         /// <summary>
         /// 単一のレーティング位置に対応する星マークを取得します（選択用）
         /// </summary>
-        /// <param name="position">星の位置 (1-5)</param>
-        /// <param name="rating">現在のレーティング値 (0-5)</param>
+        /// <param name="position">星の位置 (1)</param>
+        /// <param name="rating">現在のレーティング値 (0=なし, 1=あり)</param>
         /// <returns>対応する星マーク（塗りつぶしまたは輪郭）</returns>
         public static string GetStarAtPosition(int position, int rating)
         {
-            return position <= rating ? "★" : "☆";
+            return position == 1 && rating == 1 ? "★" : "☆";
         }
     }
 }

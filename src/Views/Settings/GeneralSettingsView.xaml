@@ -89,6 +89,50 @@
             </StackPanel>
         </GroupBox>
 
+        <!-- 新規ファイル自動選択設定 -->
+        <GroupBox Header="{DynamicResource String_Settings_General_Category}"
+                 Margin="0,10,0,0">
+            <StackPanel Margin="5">
+                <CheckBox Content="{DynamicResource String_Menu_Settings_AutoSelectNewFile}"
+                         IsChecked="{Binding AutoSelectNewFile}"
+                         Margin="0,0,0,5"/>
+                
+                <StackPanel Orientation="Horizontal" 
+                           Margin="20,0,0,0"
+                           IsEnabled="{Binding AutoSelectNewFile}">
+                    <TextBlock Text="{DynamicResource String_Settings_AutoSelectDelay}"
+                             VerticalAlignment="Center"
+                             Margin="0,0,10,0"/>
+                    <xctk:IntegerUpDown Value="{Binding AutoSelectDelayMs, Mode=TwoWay}"
+                                       Minimum="50"
+                                       Maximum="2000"
+                                       Increment="50"
+                                       Width="80" />
+                    <TextBlock Text="{DynamicResource String_Settings_AutoSelectDelayUnit}"
+                             VerticalAlignment="Center"
+                             Margin="5,0,0,0"/>
+                </StackPanel>
+                
+                <CheckBox Content="{DynamicResource String_Settings_AutoOpenWithExternalApp}"
+                         IsChecked="{Binding AutoOpenWithExternalApp}"
+                         Margin="0,5,0,0"
+                         IsEnabled="{Binding AutoSelectNewFile}"/>
+
+                <CheckBox Content="{DynamicResource String_Settings_AutoIgnoreVideos}"
+                         IsChecked="{Binding AutoIgnoreVideos}"
+                         Margin="0,5,0,0"
+                         IsEnabled="{Binding AutoSelectNewFile}"/>
+                
+                <CheckBox Content="{DynamicResource String_Settings_DoubleClickOpenWithExternalApp}"
+                         IsChecked="{Binding DoubleClickOpenWithExternalApp}"
+                         Margin="0,5,0,0"/>
+                
+                <CheckBox Content="{DynamicResource String_Settings_IncludeImmediateSubfolders}"
+                         IsChecked="{Binding IncludeImmediateSubfolders}"
+                         Margin="0,5,0,0"/>
+            </StackPanel>
+        </GroupBox>
+
         <GroupBox Header="{DynamicResource String_Settings_Font_Section}" Margin="0,10,0,0">
             <StackPanel Orientation="Horizontal" Margin="0,10,0,5">
                 <TextBlock Text="{DynamicResource String_Settings_Display_FontSize}"

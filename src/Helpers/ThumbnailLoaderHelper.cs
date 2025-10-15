@@ -901,9 +901,32 @@ public class ThumbnailLoaderHelper
 
             // サポートされている拡張子をFileHelperから取得
             var files = new List<string>();
+            
+            // 現在フォルダのファイルを取得
             foreach (var extension in FileHelper.SupportedExtensions)
             {
                 files.AddRange(Directory.GetFiles(folderPath, $"*{extension}", SearchOption.TopDirectoryOnly));
+            }
+
+            // 設定でサブフォルダを含める場合、直下の子フォルダも検索
+            var settings = SettingsHelper.GetSettings();
+            if (settings.IncludeImmediateSubfolders && !IsRootDrive(folderPath))
+            {
+                try
+                {
+                    var subfolders = Directory.GetDirectories(folderPath);
+                    foreach (var subfolder in subfolders)
+                    {
+                        foreach (var extension in FileHelper.SupportedExtensions)
+                        {
+                            files.AddRange(Directory.GetFiles(subfolder, $"*{extension}", SearchOption.TopDirectoryOnly));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogHelper.LogWithTimestamp($"サブフォルダの検索中にエラーが発生しました: {ex.Message}", "ThumbnailLoader");
+                }
             }
 
             // ファイル取得時間を計測
@@ -960,6 +983,24 @@ public class ThumbnailLoaderHelper
         {
             LogHelper.LogError($"エラー: {ex.Message}", ex);
             return new List<string>();
+        }
+    }
+
+    /// <summary>
+    /// 指定されたパスがルートドライブ（C:\、D:\など）かどうかを判定します
+    /// </summary>
+    /// <param name="path">判定するパス</param>
+    /// <returns>ルートドライブの場合はtrue、それ以外はfalse</returns>
+    private static bool IsRootDrive(string path)
+    {
+        try
+        {
+            var directoryInfo = new DirectoryInfo(path);
+            return directoryInfo.Parent == null;
+        }
+        catch
+        {
+            return false;
         }
     }
 

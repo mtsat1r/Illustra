@@ -66,6 +66,9 @@ namespace Illustra.ViewModels.Settings
             // ビューワ設定の保存
             ViewerSettingsHelper.SaveSettings(_viewerSettings);
 
+            // LRUキャッシュサイズを更新
+            Illustra.Extensions.FileNodeModelExtensions.UpdateCacheSize(_settings.ThumbnailCacheSize);
+
             // UI更新
             UpdateUI();
         }

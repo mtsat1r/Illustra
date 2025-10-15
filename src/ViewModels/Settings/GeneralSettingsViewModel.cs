@@ -186,6 +186,90 @@ namespace Illustra.ViewModels.Settings
             }
         }
 
+        private bool _autoSelectNewFile;
+        public bool AutoSelectNewFile
+        {
+            get => _autoSelectNewFile;
+            set
+            {
+                if (_autoSelectNewFile != value)
+                {
+                    _autoSelectNewFile = value;
+                    OnPropertyChanged(nameof(AutoSelectNewFile));
+                }
+            }
+        }
+
+        private int _autoSelectDelayMs = 200;
+        public int AutoSelectDelayMs
+        {
+            get => _autoSelectDelayMs;
+            set
+            {
+                if (_autoSelectDelayMs != value)
+                {
+                    _autoSelectDelayMs = value;
+                    OnPropertyChanged(nameof(AutoSelectDelayMs));
+                }
+            }
+        }
+
+        private bool _autoOpenWithExternalApp;
+        public bool AutoOpenWithExternalApp
+        {
+            get => _autoOpenWithExternalApp;
+            set
+            {
+                if (_autoOpenWithExternalApp != value)
+                {
+                    _autoOpenWithExternalApp = value;
+                    OnPropertyChanged(nameof(AutoOpenWithExternalApp));
+                }
+            }
+        }
+
+        private bool _autoIgnoreVideos;
+        public bool AutoIgnoreVideos
+        {
+            get => _autoIgnoreVideos;
+            set
+            {
+                if (_autoIgnoreVideos != value)
+                {
+                    _autoIgnoreVideos = value;
+                    OnPropertyChanged(nameof(AutoIgnoreVideos));
+                }
+            }
+        }
+
+        private bool _doubleClickOpenWithExternalApp;
+        public bool DoubleClickOpenWithExternalApp
+        {
+            get => _doubleClickOpenWithExternalApp;
+            set
+            {
+                if (_doubleClickOpenWithExternalApp != value)
+                {
+                    _doubleClickOpenWithExternalApp = value;
+                    OnPropertyChanged(nameof(DoubleClickOpenWithExternalApp));
+                }
+            }
+        }
+
+        private bool _includeImmediateSubfolders;
+        public bool IncludeImmediateSubfolders
+        {
+            get => _includeImmediateSubfolders;
+            set
+            {
+                if (_includeImmediateSubfolders != value)
+                {
+                    _includeImmediateSubfolders = value;
+                    OnPropertyChanged(nameof(IncludeImmediateSubfolders));
+                }
+            }
+        }
+
         public GeneralSettingsViewModel(AppSettingsModel settings, ViewerSettings viewerSettings)
         {
             _settings = settings;
@@ -244,6 +328,12 @@ namespace Illustra.ViewModels.Settings
             SelectLastFileOnStartup = _settings.SelectLastFileOnStartup;
             AppFontSize = _settings.AppFontSize;
             App.UpdateAppFontSize(AppFontSize);
+            AutoSelectNewFile = _settings.AutoSelectNewFile;
+            AutoSelectDelayMs = _settings.AutoSelectDelayMs;
+            AutoOpenWithExternalApp = _settings.AutoOpenWithExternalApp;
+            AutoIgnoreVideos = _settings.AutoIgnoreVideos;
+            DoubleClickOpenWithExternalApp = _settings.DoubleClickOpenWithExternalApp;
+            IncludeImmediateSubfolders = _settings.IncludeImmediateSubfolders;
 
             // ViewerSettingsの読み込み
             DeleteModePermanent = _viewerSettings.DeleteMode == FileDeleteMode.Permanent;
@@ -263,6 +353,12 @@ namespace Illustra.ViewModels.Settings
             _settings.StartupFolderPath = StartupFolderPath;
             _settings.SelectLastFileOnStartup = SelectLastFileOnStartup;
             _settings.AppFontSize = AppFontSize;
+            _settings.AutoSelectNewFile = AutoSelectNewFile;
+            _settings.AutoSelectDelayMs = AutoSelectDelayMs;
+            _settings.AutoOpenWithExternalApp = AutoOpenWithExternalApp;
+            _settings.AutoIgnoreVideos = AutoIgnoreVideos;
+            _settings.DoubleClickOpenWithExternalApp = DoubleClickOpenWithExternalApp;
+            _settings.IncludeImmediateSubfolders = IncludeImmediateSubfolders;
             App.UpdateAppFontSize(AppFontSize);
 
             // ViewerSettingsの保存

@@ -132,7 +132,7 @@
                                            VerticalAlignment="Center"
                                            FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                            Margin="0,0,35,0"/>
-                                <Button x:Name="RatingStar1"
+                                <Button x:Name="RatingStar"
                                         Style="{DynamicResource Illustra.Styles.RatingStarButton}"
                                         Tag="1"
                                         Focusable="False"
@@ -141,55 +141,7 @@
                                         <controls:RatingStarControl RatingValue="1"
                                                                     Height="18"
                                                                     Width="18"
-                                                                    DisplayMode="Multiple"
-                                                                    CurrentRating="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Button>
-                                <Button x:Name="RatingStar2"
-                                        Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                                        Tag="2"
-                                        Focusable="False"
-                                        Command="{Binding RatingCommand, ElementName=PropertyPanel}"
-                                        CommandParameter="2">
-                                        <controls:RatingStarControl RatingValue="2"
-                                                                    Height="18"
-                                                                    Width="18"
-                                                                    DisplayMode="Multiple"
-                                                                    CurrentRating="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Button>
-                                <Button x:Name="RatingStar3"
-                                        Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                                        Tag="3"
-                                        Focusable="False"
-                                        Command="{Binding RatingCommand, ElementName=PropertyPanel}"
-                                        CommandParameter="3">
-                                        <controls:RatingStarControl RatingValue="3"
-                                                                    Height="18"
-                                                                    Width="18"
-                                                                    DisplayMode="Multiple"
-                                                                    CurrentRating="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Button>
-                                <Button x:Name="RatingStar4"
-                                        Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                                        Tag="4"
-                                        Focusable="False"
-                                        Command="{Binding RatingCommand, ElementName=PropertyPanel}"
-                                        CommandParameter="4">
-                                        <controls:RatingStarControl RatingValue="4"
-                                                                    Height="18"
-                                                                    Width="18"
-                                                                    DisplayMode="Multiple"
-                                                                    CurrentRating="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Button>
-                                <Button x:Name="RatingStar5"
-                                        Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                                        Tag="5"
-                                        Focusable="False"
-                                        Command="{Binding RatingCommand, ElementName=PropertyPanel}"
-                                        CommandParameter="5">
-                                        <controls:RatingStarControl RatingValue="5"
-                                                                    Height="18"
-                                                                    Width="18"
-                                                                    DisplayMode="Multiple"
+                                                                    DisplayMode="Single"
                                                                     CurrentRating="{Binding Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </Button>
                         </StackPanel>

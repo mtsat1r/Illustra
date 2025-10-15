@@ -28,6 +28,15 @@ Illustra は、高速で使いやすい Windows 用画像ビューアです。
 - 🎞️ アニメーション WebP ファイルの再生
 - 📑 複数フォルダのタブ表示
 
+### Fork版の追加機能
+
+- 🔍 **ファイル名によるフィルタ** - ファイル名で画像を検索・フィルタリング
+- ❤️ **お気に入り機能** - 5段階レーティング機能を廃止し、シンプルなお気に入り機能に変更
+- 📋 **複数ファイルの一括操作** - 複数ファイルの一括コピーや削除機能
+- 🔗 **既定のアプリで開く** - 選択したファイルを既定のアプリケーションで開く機能
+- 📁 **子フォルダも検索対象** - 検索時に子フォルダも含めて検索対象とする機能
+- 🔄 **新規ファイル自動開く機能の改善** - 新規ファイル追加時の自動開く機能の共有違反に対処
+
 ### 開発チーム
 
 - nirvash
@@ -198,6 +207,15 @@ Illustra is a fast and user-friendly image viewer for Windows. It implements vir
 - 🎬 MP4 video file playback
 - 🎞️ Animated WebP file playback
 - 📑 Multi-folder tab view
+
+### Fork Version Additional Features
+
+- 🔍 **Filename Filtering** - Search and filter images by filename
+- ❤️ **Favorite Feature** - Replaced 5-star rating system with simple favorite functionality
+- 📋 **Bulk File Operations** - Bulk copy and delete multiple files
+- 🔗 **Open with Default App** - Open selected files with default application
+- 📁 **Include Subfolders in Search** - Include subfolders in search operations
+- 🔄 **Improved Auto-open for New Files** - Fixed sharing violations in auto-open functionality for new files
 
 ### System Requirements
 

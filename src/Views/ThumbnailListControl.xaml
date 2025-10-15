@@ -74,6 +74,8 @@
                 <!-- サムネイルサイズ -->
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <!-- ファイル名フィルタ -->
+                <ColumnDefinition Width="Auto"/>
                 <!-- レーティングフィルター -->
             </Grid.ColumnDefinitions>
 
@@ -113,9 +115,32 @@
                         Thumb.DragCompleted="ThumbnailSizeSlider_DragCompleted"/>
             </StackPanel>
 
+            <!-- ファイル名フィルタ -->
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="2"
+                        Margin="5,0">
+                <TextBlock Text="{DynamicResource String_Thumbnail_FileNameFilter}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,0"/>
+                <TextBox x:Name="FileNameFilterTextBox"
+                         Text="{Binding FileNameFilter, UpdateSourceTrigger=PropertyChanged}"
+                         Width="150"
+                         VerticalAlignment="Center"
+                         Margin="0,0,5,0"
+                         ToolTip="{DynamicResource String_Thumbnail_FileNameFilterTooltip}"
+                         GotFocus="FileNameFilterTextBox_GotFocus"
+                         LostFocus="FileNameFilterTextBox_LostFocus"/>
+                <CheckBox x:Name="IncludeExtensionCheckBox"
+                          Content="{DynamicResource String_Thumbnail_IncludeExtension}"
+                          IsChecked="{Binding IncludeExtensionInFileNameFilter, UpdateSourceTrigger=PropertyChanged}"
+                          VerticalAlignment="Center"
+                          Margin="5,0,0,0"
+                          ToolTip="{DynamicResource String_Thumbnail_IncludeExtensionTooltip}"/>
+            </StackPanel>
+
             <!-- レーティングフィルター  -->
             <StackPanel Orientation="Horizontal"
-                        Grid.Column="2">
+                        Grid.Column="3">
                 <TextBlock Text="{DynamicResource String_Thumbnail_Rating}"
                            VerticalAlignment="Center"
                            Margin="0,0,5,0"/>
@@ -132,55 +157,7 @@
                                                  Width="18"
                                                  Margin="0"
                                                  Padding="0"
-                                                 DisplayMode="Multiple"
-                                                 CurrentRating="{Binding CurrentRatingFilter}"/>
-                    </Button>
-                    <Button Tag="2"
-                            Click="RatingFilter_Click"
-                            x:Name="Filter2"
-                            ToolTip="{DynamicResource String_Thumbnail_RatingFilter}"
-                            Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                            Focusable="False">
-                        <local:RatingStarControl RatingValue="2"
-                                                 Height="18"
-                                                 Width="18"
-                                                 DisplayMode="Multiple"
-                                                 CurrentRating="{Binding CurrentRatingFilter}"/>
-                    </Button>
-                    <Button Tag="3"
-                            Click="RatingFilter_Click"
-                            x:Name="Filter3"
-                            ToolTip="{DynamicResource String_Thumbnail_RatingFilter}"
-                            Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                            Focusable="False">
-                        <local:RatingStarControl RatingValue="3"
-                                                 Height="18"
-                                                 Width="18"
-                                                 DisplayMode="Multiple"
-                                                 CurrentRating="{Binding CurrentRatingFilter}"/>
-                    </Button>
-                    <Button Tag="4"
-                            Click="RatingFilter_Click"
-                            x:Name="Filter4"
-                            ToolTip="{DynamicResource String_Thumbnail_RatingFilter}"
-                            Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                            Focusable="False">
-                        <local:RatingStarControl RatingValue="4"
-                                                 Height="18"
-                                                 Width="18"
-                                                 DisplayMode="Multiple"
-                                                 CurrentRating="{Binding CurrentRatingFilter}"/>
-                    </Button>
-                    <Button Tag="5"
-                            Click="RatingFilter_Click"
-                            x:Name="Filter5"
-                            ToolTip="{DynamicResource String_Thumbnail_RatingFilter}"
-                            Style="{DynamicResource Illustra.Styles.RatingStarButton}"
-                            Focusable="False">
-                        <local:RatingStarControl RatingValue="5"
-                                                 Height="18"
-                                                 Width="18"
-                                                 DisplayMode="Multiple"
+                                                 DisplayMode="Single"
                                                  CurrentRating="{Binding CurrentRatingFilter}"/>
                     </Button>
                 </StackPanel>
@@ -497,7 +474,8 @@
                                 <!-- SVG星マーク -->
                                 <local:RatingStarControl
                                     x:Name="RatingStarMark"
-                                    RatingValue="{Binding Rating, UpdateSourceTrigger=PropertyChanged}"
+                                    RatingValue="1"
+                                    CurrentRating="{Binding Rating, UpdateSourceTrigger=PropertyChanged}"
                                     DisplayMode="Single"
                                     StrokeColor="White"
                                     Width="22"

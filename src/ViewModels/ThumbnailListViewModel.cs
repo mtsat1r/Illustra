@@ -190,6 +190,8 @@ namespace Illustra.ViewModels
         private bool _isTagFilterEnabled;
         private List<string> _extensionFilters = []; // 追加
         private bool _isExtensionFilterEnabled; // 追加
+        private string _fileNameFilter = string.Empty; // ファイル名フィルタ
+        private bool _includeExtensionInFileNameFilter = false; // ファイル名フィルタで拡張子も含めるかどうか
         private bool _isFilterResultEmpty; // フィルタ結果が空かどうか
 
         /// <summary>
@@ -264,6 +266,46 @@ namespace Illustra.ViewModels
         }
 
         /// <summary>
+        /// ファイル名フィルタの値を取得または設定します
+        /// </summary>
+        public string FileNameFilter
+        {
+            get => _fileNameFilter;
+            set
+            {
+                if (_fileNameFilter != value)
+                {
+                    _fileNameFilter = value ?? string.Empty;
+                    OnPropertyChanged(nameof(FileNameFilter));
+                    OnPropertyChanged(nameof(IsAnyFilterActive));
+                    OnPropertyChanged(nameof(EmptyResultMessage));
+                    // フィルタが変更されたら即座に適用
+                    ApplyFilterAndUpdateSelection();
+                }
+            }
+        }
+
+        /// <summary>
+        /// ファイル名フィルタで拡張子も含めるかどうかを取得または設定します
+        /// </summary>
+        public bool IncludeExtensionInFileNameFilter
+        {
+            get => _includeExtensionInFileNameFilter;
+            set
+            {
+                if (_includeExtensionInFileNameFilter != value)
+                {
+                    _includeExtensionInFileNameFilter = value;
+                    OnPropertyChanged(nameof(IncludeExtensionInFileNameFilter));
+                    OnPropertyChanged(nameof(IsAnyFilterActive));
+                    OnPropertyChanged(nameof(EmptyResultMessage));
+                    // フィルタが変更されたら即座に適用
+                    ApplyFilterAndUpdateSelection();
+                }
+            }
+        }
+
+        /// <summary>
         /// フィルタを適用した結果、表示するアイテムがないかどうかを示す値を取得または設定します。
         /// </summary>
         public bool IsFilterResultEmpty
@@ -283,7 +325,7 @@ namespace Illustra.ViewModels
         /// </summary>
         public bool IsAnyFilterActive
         {
-            get => CurrentRatingFilter > 0 || IsPromptFilterEnabled || IsTagFilterEnabled || IsExtensionFilterEnabled;
+            get => CurrentRatingFilter > 0 || IsPromptFilterEnabled || IsTagFilterEnabled || IsExtensionFilterEnabled || !string.IsNullOrEmpty(_fileNameFilter);
             // セッターは不要だが、依存プロパティの変更通知のために OnPropertyChanged を呼び出す必要がある
         }
 
@@ -352,6 +394,30 @@ namespace Illustra.ViewModels
             {
                 string fileExtension = Path.GetExtension(fileNode.FullPath)?.ToLowerInvariant();
                 if (string.IsNullOrEmpty(fileExtension) || !_extensionFilters.Contains(fileExtension))
+                {
+                    return false;
+                }
+            }
+
+            // ファイル名フィルタ (部分一致)
+            if (!string.IsNullOrEmpty(_fileNameFilter))
+            {
+                string fileName = Path.GetFileNameWithoutExtension(fileNode.FullPath);
+                string fullFileName = Path.GetFileName(fileNode.FullPath);
+                
+                bool matches = false;
+                if (_includeExtensionInFileNameFilter)
+                {
+                    // 拡張子も含めて検索
+                    matches = fullFileName.IndexOf(_fileNameFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+                else
+                {
+                    // 拡張子を除いて検索
+                    matches = fileName.IndexOf(_fileNameFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+                
+                if (!matches)
                 {
                     return false;
                 }
@@ -432,7 +498,7 @@ namespace Illustra.ViewModels
         /// <summary>
         /// レーティングフィルターとタグフィルターを適用します
         /// </summary>
-        public async Task ApplyAllFilters(int ratingFilter, bool isPromptFilterEnabled, List<string> tagFilters, bool isTagFilterEnabled, List<string> extensionFilters, bool isExtensionFilterEnabled) // 引数追加
+        public async Task ApplyAllFilters(int ratingFilter, bool isPromptFilterEnabled, List<string> tagFilters, bool isTagFilterEnabled, List<string> extensionFilters, bool isExtensionFilterEnabled, string fileNameFilter = "", bool includeExtensionInFileNameFilter = false) // 引数追加
         {
             // レーティングフィルタの設定
             CurrentRatingFilter = ratingFilter;
@@ -449,6 +515,13 @@ namespace Illustra.ViewModels
             // 拡張子フィルタの設定 (追加)
             _extensionFilters = new List<string>(extensionFilters);
             IsExtensionFilterEnabled = isExtensionFilterEnabled;
+
+            // ファイル名フィルタの設定
+            _fileNameFilter = fileNameFilter ?? string.Empty;
+
+            // ファイル名フィルタで拡張子も含めるかの設定
+            _includeExtensionInFileNameFilter = includeExtensionInFileNameFilter;
+
             OnPropertyChanged(nameof(IsAnyFilterActive)); // フィルタ状態変更を通知
             OnPropertyChanged(nameof(EmptyResultMessage)); // メッセージプロパティの変更通知
 
@@ -610,7 +683,9 @@ namespace Illustra.ViewModels
             if (propertyName == nameof(CurrentRatingFilter) ||
                 propertyName == nameof(IsPromptFilterEnabled) ||
                 propertyName == nameof(IsTagFilterEnabled) ||
-                propertyName == nameof(IsExtensionFilterEnabled))
+                propertyName == nameof(IsExtensionFilterEnabled) ||
+                propertyName == nameof(FileNameFilter) ||
+                propertyName == nameof(IncludeExtensionInFileNameFilter))
             {
                 OnPropertyChanged(nameof(IsAnyFilterActive));
                 OnPropertyChanged(nameof(EmptyResultMessage));

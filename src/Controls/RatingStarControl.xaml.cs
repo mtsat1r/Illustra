@@ -29,7 +29,7 @@ namespace Illustra.Controls
 
         #region DependencyProperties
 
-        // 評価値（1-5）
+        // 評価値（0=なし, 1=あり）
         public static readonly DependencyProperty RatingValueProperty =
             DependencyProperty.Register("RatingValue", typeof(int), typeof(RatingStarControl),
                 new PropertyMetadata(0, OnVisualPropertyChanged));
@@ -40,7 +40,7 @@ namespace Illustra.Controls
             set { SetValue(RatingValueProperty, value); }
         }
 
-        // 現在のレーティング値
+        // 現在のレーティング値（0=なし, 1=あり）
         public static readonly DependencyProperty CurrentRatingProperty =
             DependencyProperty.Register("CurrentRating", typeof(int), typeof(RatingStarControl),
                 new PropertyMetadata(0, OnVisualPropertyChanged));
@@ -147,7 +147,7 @@ namespace Illustra.Controls
             if (RatingValue <= 0) return false;
 
             return DisplayMode == RatingDisplayMode.Single
-                ? RatingValue > 0
+                ? CurrentRating > 0
                 : CurrentRating >= RatingValue;
         }
 
@@ -170,10 +170,10 @@ namespace Illustra.Controls
 
                 if (DisplayMode == RatingDisplayMode.Single)
                 {
-                    // 単独モードの場合
-                    shouldFill = RatingValue > 0;
-                    fillBrush = shouldFill ? RatingHelper.GetRatingColor(RatingValue) : Brushes.Transparent;
-                    textBrush = shouldFill ? RatingHelper.GetTextColor(RatingValue) : RatingHelper.GetTextColor(0);
+                    // 単独モードの場合: CurrentRatingの値に基づいて表示を制御
+                    shouldFill = CurrentRating > 0;
+                    fillBrush = shouldFill ? RatingHelper.GetRatingColor(CurrentRating) : Brushes.Transparent;
+                    textBrush = shouldFill ? RatingHelper.GetTextColor(CurrentRating) : RatingHelper.GetTextColor(0);
                 }
                 else
                 {
@@ -189,8 +189,8 @@ namespace Illustra.Controls
                 // RatingTextがnullの場合は処理をスキップ
                 if (RatingText == null) return;
 
-                // テキストの表示状態を設定
-                RatingText.Visibility = RatingValue > 0 ? Visibility.Visible : Visibility.Collapsed;
+                // テキストの表示状態を設定（常に非表示）
+                RatingText.Visibility = Visibility.Collapsed;
 
                 // テキストの色を直接設定
                 RatingText.Foreground = textBrush;

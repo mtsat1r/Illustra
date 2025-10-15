@@ -37,7 +37,7 @@
 
     <!-- Filter Menu -->
     <system:String x:Key="String_Menu_Filter_Prompt">プロンプト情報あり</system:String>
-    <system:String x:Key="String_Menu_Filter_Rating">レーティングでフィルタ</system:String>
+    <system:String x:Key="String_Menu_Filter_Rating">お気に入りでフィルタ</system:String>
     <system:String x:Key="String_Menu_Filter_Clear">すべてのフィルタを解除</system:String>
     <system:String x:Key="String_Menu_Filter_Extension">拡張子でフィルタ...</system:String>
 
@@ -86,7 +86,7 @@
     <!-- 表示設定 -->
     <system:String x:Key="String_Settings_Display_Section">表示設定</system:String>
     <system:String x:Key="String_Settings_Display_FileName">ファイル名を表示</system:String>
-    <system:String x:Key="String_Settings_Display_Rating">レーティングを表示</system:String>
+    <system:String x:Key="String_Settings_Display_Rating">お気に入りを表示</system:String>
     <system:String x:Key="String_Settings_Display_Details">詳細情報を表示</system:String>
     <system:String x:Key="String_Settings_Display_StableDiffusion">Stable Diffusionを表示</system:String>
     <system:String x:Key="String_Settings_Display_Comment">コメントを表示</system:String>
@@ -94,6 +94,9 @@
 
     <!-- Settings -->
     <system:String x:Key="String_Settings_Title">設定</system:String>
+    <system:String x:Key="String_Settings_ThumbnailConfig_Section">サムネイル設定</system:String>
+    <system:String x:Key="String_Settings_ThumbnailCacheSize">キャッシュサイズ</system:String>
+    <system:String x:Key="String_Settings_ThumbnailCacheSize_Unit">件</system:String>
     <system:String x:Key="String_Settings_ScrollConfig_Section">スクロール設定</system:String>
     <system:String x:Key="String_Settings_MouseWheelMultiplier">マウスホイールの速度</system:String>
     <system:String x:Key="String_Settings_Language">言語</system:String>
@@ -175,7 +178,7 @@
     <system:String x:Key="String_Property_Created">作成日時</system:String>
     <system:String x:Key="String_Property_Modified">更新日時</system:String>
     <system:String x:Key="String_Property_Type">種類</system:String>
-    <system:String x:Key="String_Property_Rating">評価</system:String>
+    <system:String x:Key="String_Property_Rating">お気に入り</system:String>
     <system:String x:Key="String_Property_Tags">タグ</system:String>
     <system:String x:Key="String_Property_NoSelection">項目が選択されていません</system:String>
     <system:String x:Key="String_Property_MultipleSelection">複数の項目が選択されています</system:String>
@@ -220,13 +223,13 @@
     <!-- Status Bar -->
     <system:String x:Key="String_Status_Folder">フォルダ</system:String>
     <system:String x:Key="String_Status_CurrentFolder">現在のフォルダ</system:String>
-    <system:String x:Key="String_Status_RatingFilter">レーティング</system:String>
+    <system:String x:Key="String_Status_RatingFilter">お気に入り</system:String>
     <system:String x:Key="String_Status_TagFilter">タグ</system:String>
     <system:String x:Key="String_Status_PromptFilter">プロンプトフィルタ有効</system:String>
     <system:String x:Key="String_Status_Filter_Prompt">プロンプト</system:String>
     <system:String x:Key="String_Status_Filter_Tag">タグ: {0}</system:String>
     <system:String x:Key="String_Status_Filter_Extension">拡張子: {0}</system:String>
-    <system:String x:Key="String_Status_Filter_Rating">評価: {0}</system:String>
+    <system:String x:Key="String_Status_Filter_Rating">お気に入り: {0}</system:String>
     <system:String x:Key="String_Status_Enabled">有効</system:String>
     <system:String x:Key="String_Status_SelectedItemsFormat">{0}個選択中</system:String>
 
@@ -235,18 +238,22 @@
     <system:String x:Key="String_Thumbnail_NoItemsFoundAfterFilter">フィルター条件に一致するアイテムが見つかりませんでした。</system:String>
     <system:String x:Key="String_Thumbnail_Loading">読み込み中...</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Open">開く</system:String>
-    <system:String x:Key="String_Thumbnail_ContextMenu_OpenWith">プログラムから開く</system:String>
+    <system:String x:Key="String_Thumbnail_ContextMenu_OpenAssociated">既定のアプリで開く</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_CopyPath">パスをコピー</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Delete">ファイルを削除</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Rename">ファイル名を変更</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Properties">プロパティ</system:String>
-    <system:String x:Key="String_Thumbnail_ContextMenu_SetRating">評価を設定</system:String>
+    <system:String x:Key="String_Thumbnail_ContextMenu_SetRating">お気に入りを設定</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_AddTags">タグを追加</system:String>
 
     <!-- Thumbnail List Controls -->
     <system:String x:Key="String_Thumbnail_Size">サムネイルサイズ</system:String>
-    <system:String x:Key="String_Thumbnail_Rating">レーティング</system:String>
-    <system:String x:Key="String_Thumbnail_RatingFilter">レーティングでフィルター</system:String>
+    <system:String x:Key="String_Thumbnail_Rating">お気に入り</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilter">お気に入りでフィルター</system:String>
+    <system:String x:Key="String_Thumbnail_FileNameFilter">ファイル名:</system:String>
+    <system:String x:Key="String_Thumbnail_FileNameFilterTooltip">ファイル名でフィルター（部分一致）</system:String>
+    <system:String x:Key="String_Thumbnail_IncludeExtension">拡張子も含む</system:String>
+    <system:String x:Key="String_Thumbnail_IncludeExtensionTooltip">ファイル名フィルターに拡張子も含める</system:String>
     <system:String x:Key="String_Thumbnail_ClearFilter">フィルター解除</system:String>
     <system:String x:Key="String_Thumbnail_SortAscending">昇順</system:String>
     <system:String x:Key="String_Thumbnail_SortDescending">降順</system:String>
@@ -261,18 +268,10 @@
     <system:String x:Key="String_Function_NavigateDown">下に移動</system:String>
     <system:String x:Key="String_Function_NavigateLeft">左に移動</system:String>
     <system:String x:Key="String_Function_NavigateRight">右に移動</system:String>
-    <system:String x:Key="String_Function_Rating0">レーティング解除</system:String>
-    <system:String x:Key="String_Function_Rating1">レーティング1</system:String>
-    <system:String x:Key="String_Function_Rating2">レーティング2</system:String>
-    <system:String x:Key="String_Function_Rating3">レーティング3</system:String>
-    <system:String x:Key="String_Function_Rating4">レーティング4</system:String>
-    <system:String x:Key="String_Function_Rating5">レーティング5</system:String>
+    <system:String x:Key="String_Function_Rating0">お気に入り解除</system:String>
+    <system:String x:Key="String_Function_Rating1">お気に入り切替</system:String>
     <system:String x:Key="String_Function_FilterRating0">フィルター解除</system:String>
-    <system:String x:Key="String_Function_FilterRating1">★1でフィルター</system:String>
-    <system:String x:Key="String_Function_FilterRating2">★2でフィルター</system:String>
-    <system:String x:Key="String_Function_FilterRating3">★3でフィルター</system:String>
-    <system:String x:Key="String_Function_FilterRating4">★4でフィルター</system:String>
-    <system:String x:Key="String_Function_FilterRating5">★5でフィルター</system:String>
+    <system:String x:Key="String_Function_FilterRating1">★でフィルター</system:String>
     <system:String x:Key="String_Function_Copy">コピー</system:String>
     <system:String x:Key="String_Function_Paste">ペースト</system:String>
     <system:String x:Key="String_Function_Delete">削除</system:String>
@@ -323,8 +322,8 @@
     <system:String x:Key="String_Status_Error">エラー: {0}</system:String>
 
     <!-- Thumbnail List Messages -->
-    <system:String x:Key="String_Thumbnail_RatingFilterMessage">選択したファイルはレーティングフィルターにより表示されていません。フィルターを解除しますか？</system:String>
-    <system:String x:Key="String_Thumbnail_RatingFilterTitle">レーティングフィルター</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilterMessage">選択したファイルはお気に入りフィルターにより表示されていません。フィルターを解除しますか？</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilterTitle">お気に入りフィルター</system:String>
     <system:String x:Key="String_Thumbnail_DeleteConfirmMessage">選択された{0}個のファイルを削除しますか？</system:String>
     <system:String x:Key="String_Thumbnail_MoveToRecycleBinConfirmMessage">選択された{0}個のファイルをごみ箱に移動しますか？</system:String>
     <system:String x:Key="String_Thumbnail_DeleteConfirmTitle">削除の確認</system:String>
@@ -337,6 +336,7 @@
     <system:String x:Key="String_Thumbnail_FilesCopied">ファイルをコピーしました</system:String>
     <system:String x:Key="String_Thumbnail_CopyFilePath">ファイルパスをコピー</system:String>
     <system:String x:Key="String_Thumbnail_FilePathCopied">ファイルパスをクリップボードにコピーしました</system:String>
+    <system:String x:Key="String_Thumbnail_MultipleFilePathCopied">{0}個のファイルパスをクリップボードにコピーしました</system:String>
     <system:String x:Key="String_Thumbnail_CopyFile">ファイルをコピー</system:String>
     <system:String x:Key="String_Thumbnail_FilesMoved">ファイルを移動しました</system:String>
     <system:String x:Key="String_Thumbnail_OpenInExplorer">エクスプローラで開く</system:String>
@@ -399,5 +399,10 @@
     <system:String x:Key="String_Tooltip_MuteUnmute">ミュート/ミュート解除</system:String>
     <system:String x:Key="String_Settings_Font_Section">フォント</system:String>
     <system:String x:Key="String_Settings_FontSize_Label">フォントサイズ</system:String>
-    <system:String x:Key="String_Unit_Pixel">ピクセル</system:String>
+    <system:String x:Key="String_Settings_AutoSelectDelay">自動選択の遅延時間:</system:String>
+    <system:String x:Key="String_Settings_AutoSelectDelayUnit">ミリ秒</system:String>
+    <system:String x:Key="String_Settings_AutoOpenWithExternalApp">外部アプリで開く</system:String>
+    <system:String x:Key="String_Settings_AutoIgnoreVideos">動画は無視する</system:String>
+    <system:String x:Key="String_Settings_DoubleClickOpenWithExternalApp">ダブルクリックで既定のアプリで開く</system:String>
+    <system:String x:Key="String_Settings_IncludeImmediateSubfolders">直下のサブフォルダも含める</system:String>
 </ResourceDictionary>

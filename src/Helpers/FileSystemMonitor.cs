@@ -22,6 +22,7 @@ namespace Illustra.Helpers
         private readonly Timer _processTimer;
         private bool _isMonitoring;
         private string _monitoredPath = string.Empty;
+        private readonly List<FileSystemWatcher> _subfolderWatchers = new List<FileSystemWatcher>();
 
         public FileSystemMonitor(IFileSystemChangeHandler handler, bool isDirectoryMonitoring = false)
         {
@@ -68,6 +69,13 @@ namespace Illustra.Helpers
             {
                 _watcher.EnableRaisingEvents = true;
                 _isMonitoring = true;
+                
+                // 設定でサブフォルダを含める場合、子フォルダも監視
+                var settings = SettingsHelper.GetSettings();
+                if (settings.IncludeImmediateSubfolders && !IsRootDrive(path))
+                {
+                    StartSubfolderMonitoring(path);
+                }
             }
             catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException || ex is System.ComponentModel.Win32Exception)
             {
@@ -84,6 +92,9 @@ namespace Illustra.Helpers
             _eventQueue.Clear();
             _processTimer.Stop();
             _isMonitoring = false;
+            
+            // サブフォルダの監視も停止
+            StopSubfolderMonitoring();
         }
 
         private void QueueEvent(FileSystemEventArgs e)
@@ -119,6 +130,69 @@ namespace Illustra.Helpers
             StopMonitoring();
             _watcher.Dispose();
             _processTimer.Dispose();
+            
+            // サブフォルダの監視も破棄
+            foreach (var watcher in _subfolderWatchers)
+            {
+                watcher?.Dispose();
+            }
+            _subfolderWatchers.Clear();
+        }
+
+        private void StartSubfolderMonitoring(string parentPath)
+        {
+            try
+            {
+                var subfolders = Directory.GetDirectories(parentPath);
+                foreach (var subfolder in subfolders)
+                {
+                    var subfolderWatcher = new FileSystemWatcher
+                    {
+                        Path = subfolder,
+                        NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
+                        IncludeSubdirectories = false,
+                        EnableRaisingEvents = true
+                    };
+
+                    subfolderWatcher.Created += (s, e) => QueueEvent(e);
+                    subfolderWatcher.Deleted += (s, e) => QueueEvent(e);
+                    subfolderWatcher.Renamed += (s, e) => QueueEvent(e);
+
+                    _subfolderWatchers.Add(subfolderWatcher);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error starting subfolder monitoring: {ex.Message}");
+            }
+        }
+
+        private void StopSubfolderMonitoring()
+        {
+            foreach (var watcher in _subfolderWatchers)
+            {
+                watcher.EnableRaisingEvents = false;
+                watcher.Dispose();
+            }
+            _subfolderWatchers.Clear();
+        }
+
+        /// <summary>
+        /// 指定されたパスがルートドライブ（C:\、D:\など）かどうかを判定します
+        /// </summary>
+        /// <param name="path">判定するパス</param>
+        /// <returns>ルートドライブの場合はtrue、それ以外はfalse</returns>
+        private static bool IsRootDrive(string path)
+        {
+            try
+            {
+                var directoryInfo = new DirectoryInfo(path);
+                return directoryInfo.Parent == null;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

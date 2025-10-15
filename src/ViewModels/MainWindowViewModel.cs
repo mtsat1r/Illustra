@@ -718,6 +718,19 @@ namespace Illustra.ViewModels
                         // Debug.WriteLine($"[OnFilterChanged-VM] Updating Extension Filter for Tab '{SelectedTab.State.FolderPath}'");
                     }
                 }
+                if (args.ChangedTypes.Contains(FilterChangedEventArgs.FilterChangedType.FileName))
+                {
+                    if (filterSettings.FileNameFilter != args.FileNameFilter)
+                    {
+                        filterSettings.FileNameFilter = args.FileNameFilter ?? string.Empty;
+                        // Debug.WriteLine($"[OnFilterChanged-VM] Updating FileName Filter for Tab '{SelectedTab.State.FolderPath}'");
+                    }
+                    if (filterSettings.IncludeExtensionInFileNameFilter != args.IncludeExtensionInFileNameFilter)
+                    {
+                        filterSettings.IncludeExtensionInFileNameFilter = args.IncludeExtensionInFileNameFilter;
+                        // Debug.WriteLine($"[OnFilterChanged-VM] Updating IncludeExtensionInFileNameFilter for Tab '{SelectedTab.State.FolderPath}'");
+                    }
+                }
             }
         }
 

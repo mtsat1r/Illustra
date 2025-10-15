@@ -133,6 +133,14 @@ namespace Illustra.Views
 
         protected void MainWindow_OnKeyDown(object sender, KeyEventArgs e)
         {
+            // テキストボックスにフォーカスがある場合はキーボードショートカットを無効化
+            if (e.OriginalSource is TextBox)
+            {
+                Debug.WriteLine($"[MainWindow_OnKeyDown] キー '{e.Key}' をテキストボックス用に無効化");
+                e.Handled = false;
+                return;
+            }
+
             var shortcutHandler = KeyboardShortcutHandler.Instance;
             if (shortcutHandler.IsShortcutMatch(FuncId.TogglePropertyPanel, e.Key))
             {
@@ -503,33 +511,13 @@ namespace Illustra.Views
             ApplyRatingFilter(1);
         }
 
-        private void FilterRating2MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyRatingFilter(2);
-        }
-
-        private void FilterRating3MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyRatingFilter(3);
-        }
-
-        private void FilterRating4MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyRatingFilter(4);
-        }
-
-        private void FilterRating5MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyRatingFilter(5);
-        }
-
         /// <summary>
         /// レーティングフィルタを適用します
         /// </summary>
         private void ApplyRatingFilter(int rating)
         {
-            // 同じレーティングが選択された場合はフィルタを解除
-            int newRatingFilter = (rating == _currentRatingFilter && rating > 0) ? 0 : rating;
+            // 2段階評価: 現在1なら0に、0なら1に切り替え
+            int newRatingFilter = (_currentRatingFilter == 1) ? 0 : 1;
             // _currentRatingFilter = newRatingFilter;
             // UpdateFilterMenu(); // OnFilterChanged で呼ばれる
 
@@ -834,10 +822,10 @@ namespace Illustra.Views
 
             // サブメニューの状態を更新
             FilterRating1MenuItem.IsChecked = _currentRatingFilter == 1;
-            FilterRating2MenuItem.IsChecked = _currentRatingFilter == 2;
-            FilterRating3MenuItem.IsChecked = _currentRatingFilter == 3;
-            FilterRating4MenuItem.IsChecked = _currentRatingFilter == 4;
-            FilterRating5MenuItem.IsChecked = _currentRatingFilter == 5;
+            //FilterRating2MenuItem.IsChecked = _currentRatingFilter == 2;
+            //FilterRating3MenuItem.IsChecked = _currentRatingFilter == 3;
+            //FilterRating4MenuItem.IsChecked = _currentRatingFilter == 4;
+            //FilterRating5MenuItem.IsChecked = _currentRatingFilter == 5;
 
             // フィルタクリアメニューの有効/無効を更新
             FilterClearMenuItem.IsEnabled = _currentRatingFilter > 0 || _isPromptFilterEnabled || _isTagFilterEnabled || _isExtensionFilterEnabled;

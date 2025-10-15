@@ -65,6 +65,7 @@ namespace Illustra.Views
         private bool _isExtensionFilterEnabled = false;
         private bool _isScrolling = false;
         private DispatcherTimer _scrollStopTimer;
+        private bool _isFilterTextBoxFocused = false; // フィルタテキストボックスにフォーカスがあるかどうか
 
         private CancellationTokenSource? _thumbnailLoadCts;
 
@@ -459,10 +460,31 @@ namespace Illustra.Views
             };
             copyPathItem.Click += (s, e) =>
             {
-                if (clickedItem != null)
+//例外は発生するが機能は満たしている..
+                try
                 {
-                    Clipboard.SetText(clickedItem.FullPath);
-                    ToastNotificationHelper.ShowRelativeTo(this, (string)Application.Current.FindResource("String_Thumbnail_FilePathCopied"));
+                    // 複数選択時は選択されたすべてのファイルのパスをコピー
+                    var selectedItems = _viewModel.SelectedItems.ToList();
+                    if (selectedItems.Count > 1)
+                    {
+                        // 複数選択時：改行区切りでパスを結合
+                        var paths = selectedItems.Select(item => item.FullPath);
+                        Clipboard.SetText(string.Join(Environment.NewLine, paths));
+                        ToastNotificationHelper.ShowRelativeTo(this, 
+                            string.Format((string)Application.Current.FindResource("String_Thumbnail_MultipleFilePathCopied"), selectedItems.Count));
+                    }
+                    else if (clickedItem != null)
+                    {
+                        // 単一選択時：右クリックされたアイテムのパスをコピー
+                        Clipboard.SetText(clickedItem.FullPath);
+                        ToastNotificationHelper.ShowRelativeTo(this, (string)Application.Current.FindResource("String_Thumbnail_FilePathCopied"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"ファイルパスのコピー中にエラーが発生しました: {ex.Message}");
+                    //MessageBox.Show($"クリップボードへのコピーに失敗しました：{ex.Message}", "エラー",
+                    //    MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             };
             menu.Items.Add(copyPathItem);
@@ -504,6 +526,34 @@ namespace Illustra.Views
             };
             menu.Items.Add(deleteItem);
             menu.Items.Add(new Separator()); // 区切り線を追加
+
+            // 既定のアプリで開く
+            var openAssociatedItem = new MenuItem
+            {
+                Header = (string)Application.Current.FindResource("String_Thumbnail_ContextMenu_OpenAssociated")
+            };
+            openAssociatedItem.Click += (s, e) =>
+            {
+                try
+                {
+                    if (clickedItem != null && File.Exists(clickedItem.FullPath))
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = clickedItem.FullPath,
+                            UseShellExecute = true,
+                            Verb = "open"
+                        };
+                        Process.Start(psi);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Open associated failed: {ex.Message}");
+                }
+            };
+            menu.Items.Add(openAssociatedItem);
+
 
             var explorerItem = new MenuItem
             {
@@ -580,15 +630,16 @@ namespace Illustra.Views
                 {
                     e.Handled = true; // イベントを先に処理済みにする
 
-                    // 右クリックされたアイテムを選択状態にする
+                    // 右クリックされたアイテムが選択されていない場合のみ選択状態を変更
                     if (!ThumbnailItemsControl.SelectedItems.Contains(clickedItem))
                     {
                         ThumbnailItemsControl.SelectedItems.Clear();
                         ThumbnailItemsControl.SelectedItems.Add(clickedItem);
+                        // ViewModelの選択状態も更新 (UI->ViewModel)
+                        _viewModel.SelectedItems.Clear();
+                        _viewModel.SelectedItems.Add(clickedItem);
                     }
-                    // ViewModelの選択状態も更新 (UI->ViewModel)
-                    _viewModel.SelectedItems.Clear();
-                    _viewModel.SelectedItems.Add(clickedItem);
+                    // 既に選択されている場合は選択状態を保持（何もしない）
 
                     try
                     {
@@ -704,6 +755,10 @@ namespace Illustra.Views
             if (args.SourceId == CONTROL_ID)
                 return;
 
+            // フィルタテキストボックスにフォーカスがある場合はショートカットを無効化
+            if (_isFilterTextBoxFocused)
+                return;
+
             var shortcutHandler = KeyboardShortcutHandler.Instance;
 
             // コピー (Ctrl+C)
@@ -817,7 +872,9 @@ namespace Illustra.Views
                     tagsToApply, // 更新されたリストを渡す
                     isTagEnabledToApply,
                     extensionsToApply, // 更新されたリストを渡す
-                    isExtensionEnabledToApply
+                    isExtensionEnabledToApply,
+                    _viewModel.FileNameFilter, // ファイル名フィルタを追加
+                    _viewModel.IncludeExtensionInFileNameFilter // 拡張子含むオプションを追加
                 );
 
                 // フィルタリング後の選択位置を更新 (ApplyAllFilters内で実行されるように変更された可能性もあるため、必要に応じて調整)
@@ -1074,13 +1131,44 @@ namespace Illustra.Views
                         // ソート順に従って適切な位置に挿入
                         _viewModel.AddItem(fileNode);
 
-                        // 新規ファイル自動選択の処理
+                        // 新規ファイル自動選択の処理（遅延付き）
                         if (_appSettings.AutoSelectNewFile)
                         {
-                            // UIスレッドで選択処理とフォーカスを実行
-                            await Dispatcher.InvokeAsync(() =>
+                            // 設定された遅延時間後に選択処理を実行
+                            _ = Task.Delay(_appSettings.AutoSelectDelayMs).ContinueWith(async _ =>
                             {
-                                SelectThumbnail(fileNode.FullPath);
+                                try
+                                {
+                                    await Dispatcher.InvokeAsync(() =>
+                                    {
+                                        // 動画を無視する設定が有効かつ対象が動画の場合はスキップ
+                                        if (_appSettings.AutoIgnoreVideos && FileHelper.IsVideoFile(fileNode.FullPath))
+                                        {
+                                            return;
+                                        }
+
+                                        if (_appSettings.AutoOpenWithExternalApp)
+                                        {
+                                            // 外部アプリで開く
+                                            var psi = new ProcessStartInfo
+                                            {
+                                                FileName = fileNode.FullPath,
+                                                UseShellExecute = true,
+                                                Verb = "open"
+                                            };
+                                            Process.Start(psi);
+                                        }
+                                        else
+                                        {
+                                            // サムネイルを選択
+                                            SelectThumbnail(fileNode.FullPath);
+                                        }
+                                    });
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"[自動選択] エラーが発生しました: {ex.Message}");
+                                }
                             });
                         }
 
@@ -1226,6 +1314,13 @@ namespace Illustra.Views
             {
                 try
                 {
+                    // ファイルの存在確認
+                    if (!File.Exists(filePath))
+                    {
+                        Debug.WriteLine($"[選択] ファイルが存在しません: {filePath}");
+                        return;
+                    }
+
                     DisplayGeneratedItemsInfo(ThumbnailItemsControl);
 
                     // 選択するアイテムを検索
@@ -1292,6 +1387,13 @@ namespace Illustra.Views
                             System.Diagnostics.Debug.WriteLine($"[選択エラー] 指定されたファイルパスに一致するアイテムが見つかりません: {filePath}");
                         }
                     }
+                }
+                catch (IOException ex) when (ex.Message.Contains("共有違反") || ex.Message.Contains("sharing violation"))
+                {
+                    Debug.WriteLine($"[選択] ファイル共有違反: {filePath}, 100ms後に再試行します");
+                    // 少し待ってから再試行
+                    await Task.Delay(100);
+                    SelectThumbnail(filePath, requestFocus);
                 }
                 catch (Exception ex)
                 {
@@ -1519,7 +1621,29 @@ namespace Illustra.Views
         {
             if (sender is FrameworkElement element && element.DataContext is FileNodeModel fileNode)
             {
-                ShowImageViewer(fileNode.FullPath);
+                if (_appSettings.DoubleClickOpenWithExternalApp)
+                {
+                    // 既定のアプリで開く
+                    try
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = fileNode.FullPath,
+                            UseShellExecute = true,
+                            Verb = "open"
+                        };
+                        Process.Start(psi);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Double-click open with external app failed: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    // 従来通りImageViewerで開く
+                    ShowImageViewer(fileNode.FullPath);
+                }
                 e.Handled = true;
             }
         }
@@ -1685,6 +1809,14 @@ namespace Illustra.Views
 
         private async Task ThumbnailItemsControl_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            // テキストボックスにフォーカスがある場合、またはイベントの元のソースがテキストボックスの場合はショートカットを無効化
+            if (_isFilterTextBoxFocused || e.OriginalSource is TextBox)
+            {
+                Debug.WriteLine($"[ThumbnailItemsControl_PreviewKeyDown] キー '{e.Key}' をテキストボックス用に無効化");
+                e.Handled = false;
+                return;
+            }
+
             var shortcutHandler = KeyboardShortcutHandler.Instance;
 
             // 修飾キーの場合はデフォルト動作を許可
@@ -1969,6 +2101,24 @@ namespace Illustra.Views
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// ファイル名フィルタテキストボックスにフォーカスが当たった時の処理
+        /// </summary>
+        private void FileNameFilterTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            _isFilterTextBoxFocused = true;
+            Debug.WriteLine("[FileNameFilterTextBox] GotFocus - キーボードショートカットを無効化");
+        }
+
+        /// <summary>
+        /// ファイル名フィルタテキストボックスからフォーカスが外れた時の処理
+        /// </summary>
+        private void FileNameFilterTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            _isFilterTextBoxFocused = false;
+            Debug.WriteLine("[FileNameFilterTextBox] LostFocus - キーボードショートカットを再有効化");
         }
 
 
@@ -2599,7 +2749,9 @@ namespace Illustra.Views
                             filterSettings.Tags,
                             filterSettings.Tags.Any(),
                             filterSettings.Extensions,
-                            filterSettings.Extensions.Any()
+                            filterSettings.Extensions.Any(),
+                            filterSettings.FileNameFilter,
+                            filterSettings.IncludeExtensionInFileNameFilter
                         );
                     }
                     if (sortSettings != null)
@@ -2738,12 +2890,9 @@ namespace Illustra.Views
                 !int.TryParse(button.Tag?.ToString(), out int rating))
                 return;
 
-            // 同じレーティングが選択された場合はフィルターを解除
-            if (rating == _viewModel.CurrentRatingFilter && rating != 0)
-            {
-                rating = 0;
-            }
-            await ApplyFilterling(rating);
+            // 2段階評価: 現在1なら0に、0なら1に切り替え
+            int newRating = (_viewModel.CurrentRatingFilter == 1) ? 0 : 1;
+            await ApplyFilterling(newRating);
         }
         private async void ClearFilter_Click(object sender, RoutedEventArgs e)
         {
@@ -2759,7 +2908,7 @@ namespace Illustra.Views
                 var focusedPath = focusedItem?.FullPath;
 
                 // フィルタを適用（ViewModelが状態を管理）
-                await _viewModel.ApplyAllFilters(rating, _isPromptFilterEnabled, _currentTagFilters, _isTagFilterEnabled, _currentExtensionFilters, _isExtensionFilterEnabled); // 引数追加
+                await _viewModel.ApplyAllFilters(rating, _isPromptFilterEnabled, _currentTagFilters, _isTagFilterEnabled, _currentExtensionFilters, _isExtensionFilterEnabled, _viewModel.FileNameFilter, _viewModel.IncludeExtensionInFileNameFilter); // 引数追加
 
                 // フィルター変更イベントを発行して他のコントロールに通知
                 _eventAggregator.GetEvent<FilterChangedEvent>().Publish(

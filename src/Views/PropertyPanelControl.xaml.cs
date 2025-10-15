@@ -281,7 +281,7 @@ namespace Illustra.Views
                 new RatingChangedEventArgs
                 {
                     FilePath = ImageProperties.FilePath,
-                    Rating = rating == ImageProperties.Rating ? 0 : rating // 同じ星をクリックした場合はクリア
+                    Rating = ImageProperties.Rating == 1 ? 0 : 1 // 現在1なら0に、0なら1に切り替え
                 });
 
             await Task.CompletedTask;
@@ -347,7 +347,7 @@ namespace Illustra.Views
 
         private async Task SaveUserComment(string filePath, string comment)
         {
-
+#if false//cut
             try
             {
                 using var image = await SixLabors.ImageSharp.Image.LoadAsync(filePath);
@@ -379,6 +379,7 @@ namespace Illustra.Views
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 throw;
             }
+#endif
         }
 
         // ファイル拡張子に基づいて適切なエンコーダーを返すヘルパーメソッド

@@ -37,7 +37,7 @@
 
     <!-- Filter Menu -->
     <system:String x:Key="String_Menu_Filter_Prompt">Has Prompt</system:String>
-    <system:String x:Key="String_Menu_Filter_Rating">Filter by Rating</system:String>
+    <system:String x:Key="String_Menu_Filter_Rating">Filter by Favorite</system:String>
     <system:String x:Key="String_Menu_Filter_Clear">Clear All Filters</system:String>
     <system:String x:Key="String_Menu_Filter_Extension">Filter by Extension...</system:String>
 
@@ -86,7 +86,7 @@
     <!-- 表示設定 -->
     <system:String x:Key="String_Settings_Display_Section">Display Settings</system:String>
     <system:String x:Key="String_Settings_Display_FileName">Show File Name</system:String>
-    <system:String x:Key="String_Settings_Display_Rating">Show Rating</system:String>
+    <system:String x:Key="String_Settings_Display_Rating">Show Favorite</system:String>
     <system:String x:Key="String_Settings_Display_Details">Show Details</system:String>
     <system:String x:Key="String_Settings_Display_StableDiffusion">Show Stable Diffusion</system:String>
     <system:String x:Key="String_Settings_Display_Comment">Show Comment</system:String>
@@ -94,6 +94,9 @@
 
     <!-- Settings -->
     <system:String x:Key="String_Settings_Title">Settings</system:String>
+    <system:String x:Key="String_Settings_ThumbnailConfig_Section">Thumbnail Settings</system:String>
+    <system:String x:Key="String_Settings_ThumbnailCacheSize">Cache Size</system:String>
+    <system:String x:Key="String_Settings_ThumbnailCacheSize_Unit">items</system:String>
     <system:String x:Key="String_Settings_ScrollConfig_Section">Scroll Settings</system:String>
     <system:String x:Key="String_Settings_MouseWheelMultiplier">Mouse Wheel Speed</system:String>
     <system:String x:Key="String_Settings_Language">Language</system:String>
@@ -175,7 +178,7 @@
     <system:String x:Key="String_Property_Created">Created</system:String>
     <system:String x:Key="String_Property_Modified">Modified</system:String>
     <system:String x:Key="String_Property_Type">Type</system:String>
-    <system:String x:Key="String_Property_Rating">Rating</system:String>
+    <system:String x:Key="String_Property_Rating">Favorite</system:String>
     <system:String x:Key="String_Property_Tags">Tags</system:String>
     <system:String x:Key="String_Property_NoSelection">No item selected</system:String>
     <system:String x:Key="String_Property_MultipleSelection">Multiple items selected</system:String>
@@ -220,12 +223,12 @@
     <!-- Status Bar -->
     <system:String x:Key="String_Status_Folder">Folder</system:String>
     <system:String x:Key="String_Status_CurrentFolder">Current Folder</system:String>
-    <system:String x:Key="String_Status_RatingFilter">Rating</system:String>
+    <system:String x:Key="String_Status_RatingFilter">Favorite</system:String>
     <system:String x:Key="String_Status_TagFilter">Tags</system:String>
     <system:String x:Key="String_Status_PromptFilter">Prompt Filter Enabled</system:String>
     <system:String x:Key="String_Status_Filter_Prompt">Prompt</system:String>
     <system:String x:Key="String_Status_Filter_Tag">Tag: {0}</system:String>
-    <system:String x:Key="String_Status_Filter_Rating">Rating: {0}</system:String>
+    <system:String x:Key="String_Status_Filter_Rating">Favorite: {0}</system:String>
     <system:String x:Key="String_Status_Filter_Extension">Extension: {0}</system:String>
     <system:String x:Key="String_Status_Enabled">Enabled</system:String>
     <system:String x:Key="String_Status_SelectedItemsFormat">{0} items selected</system:String>
@@ -235,18 +238,22 @@
     <system:String x:Key="String_Thumbnail_NoItemsFoundAfterFilter">No items found matching the filter criteria.</system:String>
     <system:String x:Key="String_Thumbnail_Loading">Loading...</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Open">Open</system:String>
-    <system:String x:Key="String_Thumbnail_ContextMenu_OpenWith">Open with</system:String>
+    <system:String x:Key="String_Thumbnail_ContextMenu_OpenAssociated">Open (default app)</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_CopyPath">Copy path</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Delete">Delete file</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Rename">Rename File Name</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_Properties">Properties</system:String>
-    <system:String x:Key="String_Thumbnail_ContextMenu_SetRating">Set rating</system:String>
+    <system:String x:Key="String_Thumbnail_ContextMenu_SetRating">Set favorite</system:String>
     <system:String x:Key="String_Thumbnail_ContextMenu_AddTags">Add tags</system:String>
 
     <!-- Thumbnail List Controls -->
     <system:String x:Key="String_Thumbnail_Size">Thumbnail Size</system:String>
-    <system:String x:Key="String_Thumbnail_Rating">Rating</system:String>
-    <system:String x:Key="String_Thumbnail_RatingFilter">Filter by Rating</system:String>
+    <system:String x:Key="String_Thumbnail_Rating">Favorite</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilter">Filter by Favorite</system:String>
+    <system:String x:Key="String_Thumbnail_FileNameFilter">File Name:</system:String>
+    <system:String x:Key="String_Thumbnail_FileNameFilterTooltip">Filter files by name (partial match)</system:String>
+    <system:String x:Key="String_Thumbnail_IncludeExtension">Include Extension</system:String>
+    <system:String x:Key="String_Thumbnail_IncludeExtensionTooltip">Include file extension in name filter</system:String>
     <system:String x:Key="String_Thumbnail_ClearFilter">Clear Filter</system:String>
     <system:String x:Key="String_Thumbnail_SortAscending">Asc</system:String>
     <system:String x:Key="String_Thumbnail_SortDescending">Dec</system:String>
@@ -261,18 +268,10 @@
     <system:String x:Key="String_Function_NavigateDown">Navigate Down</system:String>
     <system:String x:Key="String_Function_NavigateLeft">Navigate Left</system:String>
     <system:String x:Key="String_Function_NavigateRight">Navigate Right</system:String>
-    <system:String x:Key="String_Function_Rating0">Clear Rating</system:String>
-    <system:String x:Key="String_Function_Rating1">Rating ★1</system:String>
-    <system:String x:Key="String_Function_Rating2">Rating ★2</system:String>
-    <system:String x:Key="String_Function_Rating3">Rating ★3</system:String>
-    <system:String x:Key="String_Function_Rating4">Rating ★4</system:String>
-    <system:String x:Key="String_Function_Rating5">Rating ★5</system:String>
+    <system:String x:Key="String_Function_Rating0">Clear Favorite</system:String>
+    <system:String x:Key="String_Function_Rating1">Toggle Favorite</system:String>
     <system:String x:Key="String_Function_FilterRating0">Remove filter</system:String>
-    <system:String x:Key="String_Function_FilterRating1">Filter by ★1</system:String>
-    <system:String x:Key="String_Function_FilterRating2">Filter by ★2</system:String>
-    <system:String x:Key="String_Function_FilterRating3">Filter by ★3</system:String>
-    <system:String x:Key="String_Function_FilterRating4">Filter by ★4</system:String>
-    <system:String x:Key="String_Function_FilterRating5">Filter by ★5</system:String>
+    <system:String x:Key="String_Function_FilterRating1">Filter by ★</system:String>
     <system:String x:Key="String_Function_Copy">Copy</system:String>
     <system:String x:Key="String_Function_Paste">Paste</system:String>
     <system:String x:Key="String_Function_Delete">Delete</system:String>
@@ -323,8 +322,8 @@
     <system:String x:Key="String_Status_Error">Error: {0}</system:String>
 
     <!-- Thumbnail List Messages -->
-    <system:String x:Key="String_Thumbnail_RatingFilterMessage">The selected file is not displayed due to the rating filter. Do you want to clear the filter?</system:String>
-    <system:String x:Key="String_Thumbnail_RatingFilterTitle">Rating Filter</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilterMessage">The selected file is not displayed due to the favorite filter. Do you want to clear the filter?</system:String>
+    <system:String x:Key="String_Thumbnail_RatingFilterTitle">Favorite Filter</system:String>
     <system:String x:Key="String_Thumbnail_DeleteConfirmMessage">Are you sure you want to delete {0} selected files?</system:String>
     <system:String x:Key="String_Thumbnail_MoveToRecycleBinConfirmMessage">Are you sure you want to move {0} selected files to the recycle bin?</system:String>
     <system:String x:Key="String_Thumbnail_DeleteConfirmTitle">Delete Confirmation</system:String>
@@ -337,6 +336,7 @@
     <system:String x:Key="String_Thumbnail_FilesCopied">Files copied</system:String>
     <system:String x:Key="String_Thumbnail_CopyFilePath">Copy File Path</system:String>
     <system:String x:Key="String_Thumbnail_FilePathCopied">File path copied to clipboard</system:String>
+    <system:String x:Key="String_Thumbnail_MultipleFilePathCopied">{0} file paths copied to clipboard</system:String>
     <system:String x:Key="String_Thumbnail_CopyFile">Copy File</system:String>
     <system:String x:Key="String_Thumbnail_FilesMoved">Files moved</system:String>
     <system:String x:Key="String_Thumbnail_OpenInExplorer">Open in Explorer</system:String>
@@ -399,5 +399,10 @@
     <system:String x:Key="String_Tooltip_MuteUnmute">Mute/Unmute</system:String>
     <system:String x:Key="String_Settings_Font_Section">Font</system:String>
     <system:String x:Key="String_Settings_FontSize_Label">Font Size</system:String>
-    <system:String x:Key="String_Unit_Pixel">pixels</system:String>
+    <system:String x:Key="String_Settings_AutoSelectDelay">Auto-select delay:</system:String>
+    <system:String x:Key="String_Settings_AutoSelectDelayUnit">ms</system:String>
+    <system:String x:Key="String_Settings_AutoOpenWithExternalApp">Open with external app</system:String>
+    <system:String x:Key="String_Settings_AutoIgnoreVideos">Ignore videos</system:String>
+    <system:String x:Key="String_Settings_DoubleClickOpenWithExternalApp">Double-click to open with external app</system:String>
+    <system:String x:Key="String_Settings_IncludeImmediateSubfolders">Include immediate subfolders</system:String>
 </ResourceDictionary>

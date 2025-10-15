@@ -4,6 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
     <StackPanel>
+        <GroupBox Header="{DynamicResource String_Settings_ThumbnailConfig_Section}">
+            <Grid Margin="0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0"
+                       Content="{DynamicResource String_Settings_ThumbnailCacheSize}"
+                       VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1"
+                         Text="{Binding ThumbnailCacheSize, UpdateSourceTrigger=PropertyChanged}"
+                         VerticalAlignment="Center"
+                         Margin="5,0"/>
+                <Label Grid.Column="2"
+                       Content="{DynamicResource String_Settings_ThumbnailCacheSize_Unit}"
+                       VerticalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
         <GroupBox Header="{DynamicResource String_Settings_ScrollConfig_Section}">
             <Grid>
                 <Grid.ColumnDefinitions>

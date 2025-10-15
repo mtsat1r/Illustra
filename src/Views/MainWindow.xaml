@@ -168,22 +168,6 @@
                               Header="★"
                               IsCheckable="True"
                               Click="FilterRating1MenuItem_Click"/>
-                    <MenuItem x:Name="FilterRating2MenuItem"
-                              Header="★★"
-                              IsCheckable="True"
-                              Click="FilterRating2MenuItem_Click"/>
-                    <MenuItem x:Name="FilterRating3MenuItem"
-                              Header="★★★"
-                              IsCheckable="True"
-                              Click="FilterRating3MenuItem_Click"/>
-                    <MenuItem x:Name="FilterRating4MenuItem"
-                              Header="★★★★"
-                              IsCheckable="True"
-                              Click="FilterRating4MenuItem_Click"/>
-                    <MenuItem x:Name="FilterRating5MenuItem"
-                              Header="★★★★★"
-                              IsCheckable="True"
-                              Click="FilterRating5MenuItem_Click"/>
                 </MenuItem>
                 <MenuItem Header="{DynamicResource String_Menu_Filter_Extension}"
                           x:Name="FilterExtensionMenuItem"

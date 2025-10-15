@@ -24,6 +24,9 @@ namespace Illustra.Models
         // サムネイルサイズ
         public int ThumbnailSize { get; set; } = 120;
 
+        // サムネイルキャッシュサイズ（最大保持数）
+        public int ThumbnailCacheSize { get; set; } = 50;
+
         // 最後に選択したファイル
         public string LastSelectedFilePath { get; set; } = string.Empty;
 
@@ -108,6 +111,13 @@ namespace Illustra.Models
 
         // 新規ファイル追加時に自動選択するかどうか
         public bool AutoSelectNewFile { get; set; } = false;
+
+        // 新規ファイル自動選択時の遅延時間（ミリ秒）
+        public int AutoSelectDelayMs { get; set; } = 200;
+        public bool AutoOpenWithExternalApp { get; set; } = false;
+        public bool AutoIgnoreVideos { get; set; } = false;
+        public bool DoubleClickOpenWithExternalApp { get; set; } = false;
+        public bool IncludeImmediateSubfolders { get; set; } = false;
 
         // タブの状態リスト
         public List<TabState> TabStates { get; set; } = new List<TabState>();

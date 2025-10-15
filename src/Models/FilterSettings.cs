@@ -28,14 +28,24 @@ namespace Illustra.Models
         public List<string> Extensions { get; set; } = new List<string>();
 
         /// <summary>
+        /// ファイル名フィルタの文字列 (部分一致)
+        /// </summary>
+        public string FileNameFilter { get; set; } = string.Empty;
+
+        /// <summary>
+        /// ファイル名フィルタで拡張子も含めるかどうか
+        /// </summary>
+        public bool IncludeExtensionInFileNameFilter { get; set; } = false;
+
+        /// <summary>
         /// いずれかのフィルタが有効かどうか
         /// </summary>
-        public bool IsAnyFilterActive => Rating > 0 || HasPrompt || Tags.Count > 0 || Extensions.Count > 0;
+        public bool IsAnyFilterActive => Rating > 0 || HasPrompt || Tags.Count > 0 || Extensions.Count > 0 || !string.IsNullOrEmpty(FileNameFilter);
 
         /// <summary>
         /// デフォルトのフィルタ設定かどうか
         /// </summary>
-        public bool IsDefault => Rating == 0 && !HasPrompt && Tags.Count == 0 && Extensions.Count == 0;
+        public bool IsDefault => Rating == 0 && !HasPrompt && Tags.Count == 0 && Extensions.Count == 0 && string.IsNullOrEmpty(FileNameFilter);
 
         /// <summary>
         /// フィルタ設定をクリアします。
@@ -46,6 +56,8 @@ namespace Illustra.Models
             HasPrompt = false;
             Tags.Clear();
             Extensions.Clear();
+            FileNameFilter = string.Empty;
+            IncludeExtensionInFileNameFilter = false;
         }
 
         /// <summary>
@@ -57,6 +69,8 @@ namespace Illustra.Models
             HasPrompt = source.HasPrompt;
             Tags = new List<string>(source.Tags); // 新しいリストを作成してコピー
             Extensions = new List<string>(source.Extensions); // 新しいリストを作成してコピー
+            FileNameFilter = source.FileNameFilter;
+            IncludeExtensionInFileNameFilter = source.IncludeExtensionInFileNameFilter;
         }
 
         /// <summary>
@@ -69,7 +83,9 @@ namespace Illustra.Models
                 Rating = this.Rating,
                 HasPrompt = this.HasPrompt,
                 Tags = new List<string>(this.Tags), // 新しいリストを作成してコピー
-                Extensions = new List<string>(this.Extensions) // 新しいリストを作成してコピー
+                Extensions = new List<string>(this.Extensions), // 新しいリストを作成してコピー
+                FileNameFilter = this.FileNameFilter,
+                IncludeExtensionInFileNameFilter = this.IncludeExtensionInFileNameFilter
             };
             return clone;
         }
